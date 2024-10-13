@@ -86,11 +86,11 @@ worker_function(void *arg)
 		unsigned char hash_buffer[SHA256_DIGEST_LENGTH];
 		my_hash(data, DATA_SIZE, hash_buffer);
 
-		// bool first_8_bits_are_zero = hash_buffer[0] == 0;
-		bool first_16_bits_are_zero =
-			hash_buffer[0] == 0 && hash_buffer[1] == 0;
+		bool first_8_bits_are_zero = hash_buffer[0] == 0;
+		// bool first_16_bits_are_zero =
+		// 	hash_buffer[0] == 0 && hash_buffer[1] == 0;
 
-		if (first_16_bits_are_zero)
+		if (first_8_bits_are_zero)
 		{
 			found++;
 			write_file("file" + to_string(thread_id * 1000000 + found),
@@ -132,4 +132,3 @@ main()
 
 	return 0;
 }
-
