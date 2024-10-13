@@ -2,9 +2,10 @@
 #include <openssl/evp.h>
 #include <openssl/ec.h>
 #include <openssl/pem.h>
+#include <openssl/rsa.h>
 
 void
-run_generate_key()
+run_generate_key(string type)
 {
 	Logger &l = Logger::get();
 
@@ -15,7 +16,27 @@ run_generate_key()
 		return;
 	}
 
-	EVP_PKEY *key = EVP_EC_gen("P-256");
+	EVP_PKEY *key;
+
+	if (type == "rsa")
+	{
+		key = EVP_RSA_gen(3072);
+	}
+	else if (type == "ec")
+	{
+		// openssl ecparam -list_curves
+		string curve;
+
+		curve = "brainpoolP512t1"; // kinda long 512 bits
+		// curve = "secp112r1"; // short 112 bits
+
+		key = EVP_EC_gen(curve.c_str());
+	}
+	else
+	{
+		l.FATAL("invalid type");
+	}
+
 	if (!key)
 	{
 		l.ERROR("failed to generate key");

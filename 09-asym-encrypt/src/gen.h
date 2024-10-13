@@ -1,3 +1,7 @@
 #pragma once
 
-void run_generate_key();
+#include <string>
+
+using namespace std;
+
+void run_generate_key(string type);
