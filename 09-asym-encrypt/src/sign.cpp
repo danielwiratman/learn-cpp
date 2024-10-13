@@ -21,7 +21,10 @@ run_sign()
 	if (!privKey)
 		l.FATAL("cannot read private key");
 
-	l.INFO(EVP_PKEY_base_id(privKey) == EVP_PKEY_EC ? "EC" : "unknown");
+	l.INFO(EVP_PKEY_base_id(privKey) == EVP_PKEY_EC	 ? "EC" :
+		   EVP_PKEY_base_id(privKey) == EVP_PKEY_RSA ? "RSA" :
+													   "unknown");
+
 	l.INFO(EVP_PKEY_bits(privKey));
 
 	EVP_MD_CTX *ctx = EVP_MD_CTX_new();

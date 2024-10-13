@@ -22,8 +22,8 @@ main(int args, char **argv)
 	{
 		l.INFO("generate key mode, should produce 2 files (key.pub and key)");
 
-		// run_generate_key("ec");
-		run_generate_key("rsa");
+		run_generate_key("ec");
+		// run_generate_key("rsa");
 	}
 	else if (mode == "sign")
 	{

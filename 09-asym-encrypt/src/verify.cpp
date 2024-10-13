@@ -18,7 +18,9 @@ run_verify()
 	if (!pubKey)
 		l.FATAL("cannot read public key");
 
-	l.INFO(EVP_PKEY_base_id(pubKey) == EVP_PKEY_EC ? "EC" : "unknown");
+	l.INFO(EVP_PKEY_base_id(pubKey) == EVP_PKEY_EC	? "EC" :
+		   EVP_PKEY_base_id(pubKey) == EVP_PKEY_RSA ? "RSA" :
+													  "unknown");
 	l.INFO(EVP_PKEY_bits(pubKey));
 
 	EVP_MD_CTX *ctx = EVP_MD_CTX_new();
