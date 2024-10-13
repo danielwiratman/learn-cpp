@@ -17,8 +17,6 @@ main(int args, char **argv)
 
 	if (args > 1)
 		mode = argv[1];
-	else
-		mode = "gen";
 
 	if (mode == "gen")
 	{
@@ -54,6 +52,14 @@ main(int args, char **argv)
 	}
 	else
 	{
-		l.FATAL("invalid mode");
+		printf("Usage: %s [gen|sign|verify|clean]\n"
+			   "\n"
+			   "gen: generate key (key and key.pub)\n"
+			   "sign: sign data (using key to sign data.csv producing "
+			   "signature)\n"
+			   "verify: verify signature (using key.pub and signature to "
+			   "verify data.csv\n"
+			   "clean: clean all generated files (key.pub, key, signature)\n",
+			   argv[0]);
 	}
 }
