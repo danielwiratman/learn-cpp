@@ -1,0 +1,59 @@
+#include "sign.h"
+#include "utils.h"
+#include "verify.h"
+#include "gen.h"
+#include "logger.h"
+
+#include <string>
+
+using namespace std;
+
+int
+main(int args, char **argv)
+{
+	Logger &l = Logger::get();
+
+	string mode;
+
+	if (args > 1)
+		mode = argv[1];
+	else
+		mode = "gen";
+
+	if (mode == "gen")
+	{
+		l.INFO("generate key mode, should produce 2 files (key.pub and key)");
+		run_generate_key();
+	}
+	else if (mode == "sign")
+	{
+		l.INFO("signing mode, requires 2 files (data.csv, key)");
+
+		if (!check_files("data.csv", "key"))
+		{
+			l.FATAL("check_files");
+		}
+
+		run_sign();
+	}
+	else if (mode == "verify")
+	{
+		l.INFO("verify mode, requires 3 files (data.csv, key.pub, signature)");
+
+		if (!check_files("data.csv", "key.pub", "signature"))
+		{
+			l.FATAL("check_files");
+		}
+
+		run_verify();
+	}
+	else if (mode == "clean")
+	{
+		l.INFO("clean mode, should remove all files");
+		clean_files("key.pub", "key", "signature");
+	}
+	else
+	{
+		l.FATAL("invalid mode");
+	}
+}
