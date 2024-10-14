@@ -1,0 +1,9 @@
+=== STEPS ===
+1. Create a genesis block
+2. Create a blockchain from genesis block
+3. Register 5 transactions
+4. Create a block from that transactions
+5. Append the block to the blockchain
+6. Do this until 5 blocks are created
+=== END ===
+
