@@ -32,14 +32,8 @@ main()
 	charlie_wallet.print_info();
 
 	// Alice -> Bob 0.5 dccoins
-	DCTransaction tx1(emptyHash, bob_wallet.address, 0.5);
-	memPool.add_transaction(tx1, alice_wallet.address);
 
 	// Charlie -> Bob 1.5 dccoins
-	DCTransaction tx2(emptyHash, bob_wallet.address, 1.5);
-	memPool.add_transaction(tx2, charlie_wallet.address);
 
 	// Bob -> Alice 0.1 dccoins
-	DCTransaction tx3(emptyHash, alice_wallet.address, 0.1);
-	memPool.add_transaction(tx3, bob_wallet.address);
 }

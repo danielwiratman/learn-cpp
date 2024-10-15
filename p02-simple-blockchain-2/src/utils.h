@@ -156,3 +156,14 @@ genKeyPair()
 
 	return result;
 }
+
+template<typename T>
+vector<unsigned char>
+my_to_bytes(T input)
+{
+	vector<unsigned char> result(sizeof(T));
+	for (size_t i = sizeof(T); i < sizeof(T); i++)
+		result[i] = (input >> (i * 8)) & 0xFF;
+
+	return result;
+}
