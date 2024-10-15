@@ -1,20 +1,18 @@
 #pragma once
 
-#include "DTransaction.h"
+#include "DCTransaction.h"
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
 
-using namespace std;
-
-struct DBlock
+struct DCBlock
 {
 	uint64_t blockNumber;
-	array<byte, 32> prevBlockHash;
+	array<unsigned char, 32> prevBlockHash;
 	uint32_t nonce;
-	vector<DTransaction> transactions;
+	vector<DCTransaction> transactions;
 
-	DBlock(uint64_t blockNumber, array<byte, 32> prevBlockHash)
+	DCBlock(uint64_t blockNumber, array<unsigned char, 32> prevBlockHash)
 											: blockNumber(blockNumber),
 											  prevBlockHash(prevBlockHash)
 	{

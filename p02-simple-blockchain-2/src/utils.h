@@ -2,6 +2,7 @@
 
 #include "logger.h"
 
+#include <array>
 #include <cstdio>
 #include <openssl/evp.h>
 #include <openssl/ec.h>
@@ -26,62 +27,61 @@ print_story()
 	fclose(story_file);
 }
 
-inline void
-my_sha256_hash(unsigned char *input, size_t input_length, unsigned char *output)
+inline array<unsigned char, 32>
+my_sha256_hash(const vector<unsigned char> &input)
 {
-	EVP_MD_CTX *ctx;
-
-	ctx = EVP_MD_CTX_create();
+	EVP_MD_CTX *ctx = EVP_MD_CTX_create();
 	if (ctx == NULL)
 		l.FATAL("EVP_MD_CTX_create");
 
 	if (EVP_DigestInit(ctx, EVP_sha256()) != 1)
 		l.FATAL("EVP_DigestInit");
 
-	if (EVP_DigestUpdate(ctx, input, input_length) != 1)
+	if (EVP_DigestUpdate(ctx, input.data(), input.size()) != 1)
 		l.FATAL("EVP_DigestUpdate");
 
-	if (EVP_DigestFinal(ctx, output, NULL) != 1)
+	array<unsigned char, 32> result;
+	if (EVP_DigestFinal(ctx, result.data(), NULL) != 1)
 		l.FATAL("EVP_DigestFinal");
 
 	EVP_MD_CTX_destroy(ctx);
+
+	return result;
 }
 
-inline void
-my_ripemd160_hash(unsigned char *input, size_t input_length,
-				  unsigned char *output)
+inline array<unsigned char, 20>
+my_ripemd160_hash(const vector<unsigned char> &input)
 {
-	EVP_MD_CTX *ctx;
-
-	ctx = EVP_MD_CTX_create();
+	EVP_MD_CTX *ctx = EVP_MD_CTX_create();
 	if (ctx == NULL)
 		l.FATAL("EVP_MD_CTX_create");
 
 	if (EVP_DigestInit(ctx, EVP_ripemd160()) != 1)
 		l.FATAL("EVP_DigestInit");
 
-	if (EVP_DigestUpdate(ctx, input, input_length) != 1)
+	if (EVP_DigestUpdate(ctx, input.data(), input.size()) != 1)
 		l.FATAL("EVP_DigestUpdate");
 
-	if (EVP_DigestFinal(ctx, output, NULL) != 1)
+	array<unsigned char, 20> result;
+	if (EVP_DigestFinal(ctx, result.data(), NULL) != 1)
 		l.FATAL("EVP_DigestFinal");
 
 	EVP_MD_CTX_destroy(ctx);
+
+	return result;
 }
 
 inline string
-encode_base58(const unsigned char *input, size_t input_length)
+encode_base58(const vector<unsigned char> &input)
 {
 	const char *base58_chars =
 		"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 
-	vector<unsigned char> temp(input, input + input_length);
+	vector<unsigned char> temp(input.begin(), input.end());
 	string result;
-
-	while (!temp.empty() && temp[0] == 0)
+	for (auto it = temp.begin(); it != temp.end() && *it == 0; ++it)
 	{
 		result += '1';
-		temp.erase(temp.begin());
 	}
 
 	vector<unsigned char> encoded;
@@ -95,26 +95,30 @@ encode_base58(const unsigned char *input, size_t input_length)
 			carry = value % 58;
 		}
 		encoded.push_back(carry);
+
 		while (!temp.empty() && temp[0] == 0)
+		{
 			temp.erase(temp.begin());
+		}
 	}
 
 	for (auto it = encoded.rbegin(); it != encoded.rend(); ++it)
+	{
 		result += base58_chars[*it];
+	}
 
 	return result;
 }
 
 inline string
-address_from_pubkey(unsigned char *pubkey, int pubkey_length)
+address_from_pubkey(const vector<unsigned char> &pubKey)
 {
-	unsigned char sha_hash[32];
-	my_sha256_hash(pubkey, pubkey_length, sha_hash);
-
-	unsigned char ripemd_hash[20];
-	my_ripemd160_hash(sha_hash, 32, ripemd_hash);
-
-	return encode_base58(ripemd_hash, 20);
+	array<unsigned char, 32> sha_hash = my_sha256_hash(pubKey);
+	vector<unsigned char> sha_hash_vec(sha_hash.begin(), sha_hash.end());
+	array<unsigned char, 20> ripemd_hash = my_ripemd160_hash(sha_hash_vec);
+	vector<unsigned char> ripemd_hash_vec(ripemd_hash.begin(),
+										  ripemd_hash.end());
+	return encode_base58(ripemd_hash_vec);
 }
 
 struct KeyPair

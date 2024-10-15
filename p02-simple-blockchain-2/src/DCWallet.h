@@ -4,9 +4,7 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
-class DWallet
+class DCWallet
 {
 	vector<unsigned char> privKey;
 	vector<unsigned char> pubKey;
@@ -15,12 +13,12 @@ class DWallet
 	string name;
 	string address;
 
-	DWallet(string name) : name(name)
+	DCWallet(string name) : name(name)
 	{
 		KeyPair pair = genKeyPair();
 		privKey = pair.privKey;
 		pubKey = pair.pubKey;
-		address = address_from_pubkey(pubKey.data(), pubKey.size());
+		address = address_from_pubkey(pubKey);
 	}
 
 	void
