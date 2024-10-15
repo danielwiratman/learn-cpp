@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/UseCmake.dir/src/main.cpp.o -o /home/daniel/study/cpp/13-use-cmake/UseCmake 
