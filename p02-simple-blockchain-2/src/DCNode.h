@@ -9,16 +9,17 @@ class DCNode
 	vector<DCTransaction> mempool;
 
 	bool
-	verify_tx(const DCTransaction &tx)
+	verify_tx(const DCTransaction tx)
 	{
+		(void) tx;
 		return true;
 	}
 
   public:
-	DCNode(DCChain &chain) : chain(chain) {}
+	DCNode(DCChain chain) : chain(chain) {}
 
 	void
-	add_transaction(const DCTransaction &tx)
+	add_transaction(const DCTransaction tx)
 	{
 		mempool.push_back(tx);
 	}
@@ -55,7 +56,7 @@ class DCNode
 		} while (!first_20_bits_are_zero(newBlock.hash));
 
 		l.DEBUG("New nonce is: " + to_string(newBlock.nonce));
-		l.DEBUG("Hash: " + Logger::to_hex(newBlock.hash));
+		l.DEBUG("Hash: " + to_hex(newBlock.hash));
 		empty_line();
 
 		chain.add_block(newBlock);

@@ -18,3 +18,6 @@ obj/%.o: src/%.cpp
 
 clean:
 	rm -rf $(PROGRAM_NAME) obj
+
+run:
+	./main

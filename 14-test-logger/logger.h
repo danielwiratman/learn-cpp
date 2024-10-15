@@ -13,49 +13,43 @@ class Logger
 	static Logger &
 	get()
 	{
+		static Logger l;
 		return l;
-	}
-
-	template<typename T, typename... Args>
-	void
-	logBase(const string &level, const T &first, const Args &...args)
-	{
-		logBase(level, my_to_string(first) + " " + my_to_string(args...));
 	}
 
 	template<typename... Args>
 	void
 	INFO(const Args &...args)
 	{
-		logBase("INFO", args...);
+		log("INFO", concatenate_args(args...));
 	}
 
 	template<typename... Args>
 	void
 	DEBUG(const Args &...args)
 	{
-		logBase("DEBUG", args...);
+		log("DEBUG", concatenate_args(args...));
 	}
 
 	template<typename... Args>
 	void
 	WARNING(const Args &...args)
 	{
-		logBase("WARNING", args...);
+		log("WARNING", concatenate_args(args...));
 	}
 
 	template<typename... Args>
 	void
 	ERROR(const Args &...args)
 	{
-		logBase("ERROR", args...);
+		log("ERROR", concatenate_args(args...));
 	}
 
 	template<typename... Args>
 	void
 	FATAL(const Args &...args)
 	{
-		logBase("FATAL", args...);
+		log("FATAL", concatenate_args(args...));
 	}
 
 	bool
@@ -75,8 +69,6 @@ class Logger
 	Logger &operator=(const Logger &) = delete;
 
   private:
-	static Logger l;
-
 	ofstream logFile;
 
 	// setting constructor and destructor  as private so that it can't be called
@@ -104,10 +96,18 @@ class Logger
 		}
 	}
 
-	void
-	logBase(const string &level, const string &message)
+	template<typename T>
+	string
+	concatenate_args(const T &value)
 	{
-		log(level, message);
+		return my_to_string(value);
+	}
+
+	template<typename T, typename... Args>
+	string
+	concatenate_args(const T &first, const Args &...args)
+	{
+		return my_to_string(first) + " " + concatenate_args(args...);
 	}
 
 	template<typename T>

@@ -158,7 +158,7 @@ genKeyPair()
 }
 
 template<typename T>
-vector<unsigned char>
+inline vector<unsigned char>
 my_to_bytes(T input)
 {
 	vector<unsigned char> result(sizeof(T));
@@ -167,7 +167,7 @@ my_to_bytes(T input)
 }
 
 template<typename T>
-bool
+inline bool
 first_20_bits_are_zero(T &bytes)
 {
 	return bytes[0] == 0 && bytes[1] == 0 && (bytes[2] & 0xF0) == 0;
@@ -177,4 +177,20 @@ inline void
 empty_line()
 {
 	printf("\n");
+}
+
+template<typename T>
+inline string
+to_hex(const T &bytes)
+{
+	const char hex_chars[] = "0123456789abcdef";
+	string result;
+	result.reserve(bytes.size() * 2);
+
+	for (auto &b : bytes)
+	{
+		result.push_back(hex_chars[(b >> 4) & 0x0F]);
+		result.push_back(hex_chars[b & 0x0F]);
+	}
+	return result;
 }

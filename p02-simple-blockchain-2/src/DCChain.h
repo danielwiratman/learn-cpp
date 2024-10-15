@@ -7,10 +7,10 @@ class DCChain
 	vector<DCBlock> blocks;
 
   public:
-	DCChain(const DCBlock &genesisBlock) { blocks.push_back(genesisBlock); };
+	DCChain(const DCBlock genesisBlock) { blocks.push_back(genesisBlock); };
 
 	void
-	add_block(DCBlock &block)
+	add_block(DCBlock block)
 	{
 		blocks.push_back(block);
 	};
@@ -36,7 +36,7 @@ class DCChain
 			   "latest block hash: ",
 			   blocks.size(),
 			   get_latest_block_number());
-		printf("%s\n", Logger::to_hex(get_latest_block_hash()).c_str());
+		printf("%s\n", to_hex(get_latest_block_hash()).c_str());
 		empty_line();
 	}
 };
