@@ -68,6 +68,22 @@ class Logger
 	Logger(const Logger &) = delete;
 	Logger &operator=(const Logger &) = delete;
 
+	template<typename T>
+	static string
+	to_hex(const T &bytes)
+	{
+		const char hex_chars[] = "0123456789abcdef";
+		string result;
+		result.reserve(bytes.size() * 2);
+
+		for (auto &b : bytes)
+		{
+			result.push_back(hex_chars[(b >> 4) & 0x0F]);
+			result.push_back(hex_chars[b & 0x0F]);
+		}
+		return result;
+	}
+
   private:
 	ofstream logFile;
 

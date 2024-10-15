@@ -1,36 +1,42 @@
 #pragma once
 
 #include "DCBlock.h"
-#include "DCMempool.h"
 
 class DCChain
 {
 	vector<DCBlock> blocks;
-	vector<DCMemPool *> registeredMemPools;
 
   public:
-	DCChain(DCBlock genesisBlock) { blocks.push_back(genesisBlock); };
+	DCChain(const DCBlock &genesisBlock) { blocks.push_back(genesisBlock); };
 
 	void
-	add_block(DCBlock block)
+	add_block(DCBlock &block)
 	{
 		blocks.push_back(block);
 	};
 
-	void
-	register_mempool(DCMemPool *memPool)
+	long
+	get_latest_block_number()
 	{
-		registeredMemPools.push_back(memPool);
+		return blocks.back().blockNumber;
+	}
+
+	array<unsigned char, 32>
+	get_latest_block_hash()
+	{
+		return blocks.back().hash;
 	}
 
 	void
-	mine_new_block(string minerAddress)
+	print_info()
 	{
-		for (auto memPool : registeredMemPools)
-		{
-			array<unsigned char, 32> emptyHash;
-			DCTransaction tx(emptyHash, minerAddress, 0.1);
-			memPool->add_transaction(tx, minerAddress);
-		}
+		printf("[CHAIN]\n"
+			   "size: %ld\n"
+			   "latest block number: %ld\n"
+			   "latest block hash: ",
+			   blocks.size(),
+			   get_latest_block_number());
+		printf("%s\n", Logger::to_hex(get_latest_block_hash()).c_str());
+		empty_line();
 	}
 };

@@ -1,6 +1,7 @@
 #include "DCBlock.h"
 #include "DCChain.h"
-#include "DCMempool.h"
+#include "DCNode.h"
+#include "DCTransaction.h"
 #include "DCWallet.h"
 #include "logger.h"
 #include "utils.h"
@@ -14,14 +15,12 @@ main()
 {
 	print_story();
 
-	array<unsigned char, 32> emptyHash;
-
-	DCBlock genesisBlock(0, emptyHash);
+	DCBlock genesisBlock(0, {});
+	genesisBlock.hash = {};
 
 	DCChain chain(genesisBlock);
 
-	DCMemPool memPool;
-	chain.register_mempool(&memPool);
+	DCNode node(chain);
 
 	DCWallet alice_wallet("alice");
 	DCWallet bob_wallet("bob");
@@ -31,9 +30,15 @@ main()
 	bob_wallet.print_info();
 	charlie_wallet.print_info();
 
-	// Alice -> Bob 0.5 dccoins
+	DCTransaction tx1({ TXInput({}, 0) }, { TXOutput(bob_wallet.address, 5) });
+	DCTransaction tx2({ TXInput({}, 0) }, { TXOutput(bob_wallet.address, 5) });
+	DCTransaction tx3({ TXInput({}, 0) }, { TXOutput(bob_wallet.address, 5) });
 
-	// Charlie -> Bob 1.5 dccoins
+	node.add_transaction(tx1);
+	node.add_transaction(tx2);
+	node.add_transaction(tx3);
 
-	// Bob -> Alice 0.1 dccoins
+	node.mine_new_block();
+
+	chain.print_info();
 }

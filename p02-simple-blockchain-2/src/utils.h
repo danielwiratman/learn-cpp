@@ -162,8 +162,19 @@ vector<unsigned char>
 my_to_bytes(T input)
 {
 	vector<unsigned char> result(sizeof(T));
-	for (size_t i = sizeof(T); i < sizeof(T); i++)
-		result[i] = (input >> (i * 8)) & 0xFF;
-
+	memcpy(result.data(), &input, sizeof(T));
 	return result;
+}
+
+template<typename T>
+bool
+first_20_bits_are_zero(T &bytes)
+{
+	return bytes[0] == 0 && bytes[1] == 0 && (bytes[2] & 0xF0) == 0;
+}
+
+inline void
+empty_line()
+{
+	printf("\n");
 }

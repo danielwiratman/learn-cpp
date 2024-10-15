@@ -68,4 +68,19 @@ class DCTransaction
 	{
 		hash = my_sha256_hash(serialize_inputs_outputs());
 	}
+
+	vector<unsigned char>
+	serialize()
+	{
+		vector<unsigned char> result;
+
+		vector<unsigned char> io_serialized = serialize_inputs_outputs();
+		result.insert(result.end(), io_serialized.begin(), io_serialized.end());
+
+		result.insert(result.end(), hash.begin(), hash.end());
+
+		result.insert(result.end(), signature.begin(), signature.end());
+
+		return result;
+	};
 };
