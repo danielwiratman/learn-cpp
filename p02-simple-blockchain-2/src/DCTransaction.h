@@ -83,4 +83,22 @@ class DCTransaction
 
 		return result;
 	};
+
+	vector<TXInput>
+	get_inputs()
+	{
+		return inputs;
+	}
+
+	vector<TXOutput>
+	get_outputs()
+	{
+		return outputs;
+	}
+
+	array<unsigned char, 32>
+	get_hash()
+	{
+		return hash;
+	}
 };

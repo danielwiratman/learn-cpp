@@ -181,7 +181,7 @@ empty_line()
 
 template<typename T>
 inline string
-to_hex(const T &bytes)
+to_hex_multi(const T &bytes)
 {
 	const char hex_chars[] = "0123456789abcdef";
 	string result;
@@ -191,6 +191,18 @@ to_hex(const T &bytes)
 	{
 		result.push_back(hex_chars[(b >> 4) & 0x0F]);
 		result.push_back(hex_chars[b & 0x0F]);
+	}
+	return result;
+}
+
+template<typename T>
+inline string
+to_string_multi(const T &bytes)
+{
+	string result;
+	for (auto &b : bytes)
+	{
+		result += to_string(b);
 	}
 	return result;
 }

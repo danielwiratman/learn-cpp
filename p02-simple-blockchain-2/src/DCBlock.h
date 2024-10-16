@@ -17,7 +17,7 @@ class DCBlock
 
 	uint32_t nonce;
 
-	vector<unsigned char> transactionData;
+	vector<DCTransaction> transactions;
 
 	array<unsigned char, 32> hash;
 
@@ -38,9 +38,17 @@ class DCBlock
 
 		result.insert(result.end(), nonceBytes.begin(), nonceBytes.end());
 
+		vector<unsigned char> transactionBytes;
+		for (auto tx : transactions)
+		{
+			transactionBytes.insert(transactionBytes.end(),
+									tx.serialize().begin(),
+									tx.serialize().end());
+		}
+
 		result.insert(result.end(),
-					  transactionData.begin(),
-					  transactionData.end());
+					  transactionBytes.begin(),
+					  transactionBytes.end());
 
 		return result;
 	}

@@ -27,6 +27,12 @@ class DCChain
 		return blocks.back().hash;
 	}
 
+	DCBlock
+	get_latest_block()
+	{
+		return blocks.back();
+	}
+
 	void
 	print_info()
 	{
@@ -36,7 +42,7 @@ class DCChain
 			   "latest block hash: ",
 			   blocks.size(),
 			   get_latest_block_number());
-		printf("%s\n", to_hex(get_latest_block_hash()).c_str());
+		printf("%s\n", to_hex_multi(get_latest_block_hash()).c_str());
 		empty_line();
 	}
 };
