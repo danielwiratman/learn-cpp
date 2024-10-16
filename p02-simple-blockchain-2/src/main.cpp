@@ -20,8 +20,6 @@ main()
 
 	DCChain chain(genesisBlock);
 
-	l.INFO((void *) &chain);
-
 	DCNode node(chain);
 
 	DCWallet alice_wallet("alice");

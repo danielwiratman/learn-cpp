@@ -5,7 +5,7 @@
 
 class DCNode
 {
-	DCChain chain;
+	DCChain &chain;
 	vector<DCTransaction> mempool;
 
 	bool
@@ -16,7 +16,10 @@ class DCNode
 	}
 
   public:
-	DCNode(DCChain chain) : chain(chain) {}
+	DCNode(DCChain &chain) : chain(chain)
+	{
+		l.INFO("this->chain_ptr", &this->chain);
+	}
 
 	void
 	add_transaction(const DCTransaction tx)
@@ -53,11 +56,7 @@ class DCNode
 			newBlock.nonce++;
 			vector<unsigned char> newBlockBytes = newBlock.serialize();
 			newBlock.hash = my_sha256_hash(newBlockBytes);
-		} while (!first_20_bits_are_zero(newBlock.hash));
-
-		l.DEBUG("New nonce is: " + to_string(newBlock.nonce));
-		l.DEBUG("Hash: " + to_hex(newBlock.hash));
-		empty_line();
+		} while (!first_8_bits_are_zero(newBlock.hash));
 
 		chain.add_block(newBlock);
 	};

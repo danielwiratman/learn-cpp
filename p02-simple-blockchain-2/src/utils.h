@@ -168,9 +168,9 @@ my_to_bytes(T input)
 
 template<typename T>
 inline bool
-first_20_bits_are_zero(T &bytes)
+first_8_bits_are_zero(T &bytes)
 {
-	return bytes[0] == 0 && bytes[1] == 0 && (bytes[2] & 0xF0) == 0;
+	return bytes[0] == 0;
 }
 
 inline void
