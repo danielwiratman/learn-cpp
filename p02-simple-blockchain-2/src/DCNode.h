@@ -16,10 +16,7 @@ class DCNode
 	}
 
   public:
-	DCNode(DCChain &chain) : chain(chain)
-	{
-		l.INFO("this->chain_ptr", &this->chain);
-	}
+	DCNode(DCChain &chain) : chain(chain) {}
 
 	void
 	add_transaction(const DCTransaction tx)
