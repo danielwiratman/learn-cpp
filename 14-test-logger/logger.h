@@ -1,3 +1,23 @@
+/*
+ * Logger Utils by Daniel Wiratman (2024)
+ *
+ * Usage:
+ *
+ * As a global variable, do this
+ *
+ * #include "logger.h"
+ *
+ * Logger &l = Logger::get():
+ *
+ * Done.. if you put this file in /usr/local/include/logger.h it can even be
+ * included as #include <logger.h>
+ *
+ * I also create useful functions such as
+ * - to_string_multi --> converts vector of things into string
+ * - to_hex_multi --> converts vector of things into hex string
+ *
+ * */
+
 #pragma once
 
 #include <iostream>
@@ -123,12 +143,47 @@ class Logger
 	string
 	my_to_string(const vector<T> &value)
 	{
-		string result;
-		result.reserve(value.size());
-		for (const auto &b : value)
+		if (value.empty())
+			return "[]";
+
+		string result = "[";
+		for (size_t i = 0; i < value.size(); ++i)
 		{
-			result.push_back(static_cast<char>(b));
+			result += my_to_string(value[i]);
+			if (i < value.size() - 1)
+			{
+				result += " ";
+			}
 		}
+		result += "]";
 		return result;
 	}
 };
+
+template<typename T>
+inline string
+to_hex_multi(const vector<T> &bytes)
+{
+	const char hex_chars[] = "0123456789abcdef";
+	string result;
+	result.reserve(bytes.size() * 2);
+
+	for (auto &b : bytes)
+	{
+		result.push_back(hex_chars[(b >> 4) & 0x0F]);
+		result.push_back(hex_chars[b & 0x0F]);
+	}
+	return result;
+}
+
+template<typename T>
+inline string
+to_string_multi(const vector<T> &bytes)
+{
+	string result;
+	for (auto &b : bytes)
+	{
+		result += to_string(b);
+	}
+	return result;
+}
