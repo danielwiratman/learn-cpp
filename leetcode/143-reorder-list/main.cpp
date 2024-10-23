@@ -9,16 +9,33 @@ auto &l = Logger::get();
 
 class Solution
 {
-	ListNode *
-	getMidpoint(ListNode *head)
+  public:
+	void
+	reorderList(ListNode *head)
 	{
 		ListNode *slow = head, *fast = head;
 		while (fast && fast->next)
 		{
-			fast = fast->next->next;
 			slow = slow->next;
+			fast = fast->next->next;
 		}
-		return slow;
+
+		ListNode *rightPart = reverseList(slow->next);
+		slow->next = nullptr;
+
+		ListNode *leftPart = head;
+
+		while (rightPart)
+		{
+			ListNode *leftTmp = leftPart->next;
+			ListNode *rightTmp = rightPart->next;
+
+			leftPart->next = rightPart;
+			rightPart->next = leftTmp;
+
+			leftPart = leftTmp;
+			rightPart = rightTmp;
+		}
 	}
 
 	ListNode *
@@ -31,39 +48,15 @@ class Solution
 			curr->next = prev;
 			prev = curr;
 			curr = next;
-		};
-
-		return prev;
-	}
-
-  public:
-	void
-	reorderList(ListNode *head)
-	{
-		ListNode *midNode = getMidpoint(head);
-		ListNode *secondHalf = reverseList(midNode->next);
-		midNode->next = nullptr;
-
-		ListNode *firstHalf = head;
-		while (secondHalf)
-		{
-			ListNode *tmp1 = firstHalf->next;
-			ListNode *tmp2 = secondHalf->next;
-
-			firstHalf->next = secondHalf;
-			secondHalf->next = tmp1;
-
-			firstHalf = tmp1;
-			secondHalf = tmp2;
 		}
-
-		head->print_info();
+		return prev;
 	}
 };
 
 int
 main()
 {
-	ListNode *head = newLinkedList(vector<int>{ 1, 2, 3, 4, 5, 6 });
+	ListNode *head = newLinkedList(vector<int>{ 1, 2, 3, 67, 5, 6 });
 	Solution().reorderList(head);
+	head->print_info();
 }
