@@ -1,3 +1,6 @@
+#include <algorithm>
+#include <iterator>
+#include <list>
 #include <unordered_map>
 #include <vector>
 #include <string>
@@ -9,21 +12,22 @@ auto &l = Logger::get();
 
 class LRUCache
 {
-	unordered_map<int, int> data;
-	vector<int> cachedKeys;
+	unordered_map<int, list<pair<int, int>>::iterator> data;
+	list<pair<int, int>> cachedKeys;
 
   public:
-	LRUCache(int capacity) { cachedKeys = vector<int>(capacity, 0); }
+	LRUCache(int capacity) { cachedKeys = list<pair<int, int>>(capacity); }
 
 	int
 	get(int key)
 	{
 		if (data.find(key) != data.end())
 		{
-			for (int i = 1; i < cachedKeys.size(); i++)
-				cachedKeys[i - 1] = cachedKeys[i];
-			cachedKeys[cachedKeys.size() - 1] = key;
-			return data[key];
+			auto it = data.at(key);
+			cachedKeys.push_back({ it->first, it->second });
+			cachedKeys.erase(it);
+			data[key] = --cachedKeys.end();
+			return data.at(key)->second;
 		}
 		return -1;
 	}
@@ -31,25 +35,19 @@ class LRUCache
 	void
 	put(int key, int value)
 	{
-		data[key] = value;
-
-		for (int i = 0; i < cachedKeys.size(); i++)
+		if (data.find(key) != data.end())
 		{
-			if (cachedKeys[i] == key)
-			{
-				data[key] = value;
-				for (int i = 1; i < cachedKeys.size(); i++)
-					cachedKeys[i - 1] = cachedKeys[i];
-				cachedKeys[cachedKeys.size() - 1] = key;
-				return;
-			}
+			cachedKeys.push_back({ key, value });
+			cachedKeys.erase(data.at(key));
+			data.at(key) = --cachedKeys.end();
+			return;
 		}
-		int evictedKey = cachedKeys[0];
+		int evictedKey = cachedKeys.front().first;
 		data.erase(evictedKey);
+		cachedKeys.pop_front();
 
-		for (int i = 1; i < cachedKeys.size(); i++)
-			cachedKeys[i - 1] = cachedKeys[i];
-		cachedKeys[cachedKeys.size() - 1] = key;
+		cachedKeys.push_back({ key, value });
+		data[key] = --cachedKeys.end();
 	}
 };
 
