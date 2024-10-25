@@ -19,28 +19,29 @@ class Solution
 		while (minSpeed <= maxSpeed)
 		{
 			int midSpeed = (minSpeed + maxSpeed) / 2;
+			l.INFO("min mid max", minSpeed, midSpeed, maxSpeed);
 
-			int currHour = 0;
+			long currHour = 0;
 			for (auto &bananas : piles)
 				currHour += (bananas + midSpeed - 1) / midSpeed;
 
-			// time took too short, need to slow down speed to make time longer
+			// l.INFO("currHour", currHour);
+
 			if (currHour <= h)
 				maxSpeed = midSpeed - 1;
-			// time took too long, need to speed up speed to make time shorter
-			else if (currHour > h)
+			else if (currHour >= h)
 				minSpeed = midSpeed + 1;
 		}
 
-		return -1;
+		return minSpeed;
 	}
 };
 
 int
 main()
 {
-	vector<int> piles = { 30, 11, 23, 4, 20 };
-	int h = 5;
+	vector<int> piles = { 30 };
+	int h = 20;
 
 	l.INFO(Solution().minEatingSpeed(piles, h));
 }
