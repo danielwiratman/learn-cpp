@@ -1,5 +1,8 @@
 #pragma once
 
+#include <climits>
+#include <cmath>
+#include <iomanip>
 #include <logger.h>
 #include <queue>
 
@@ -69,23 +72,63 @@ struct TreeNode
 		{
 			TreeNode *curr = q.front();
 			q.pop();
-			nums.push_back(curr->val);
 
-			if (curr->left)
+			if (curr)
+			{
+				nums.push_back(curr->val);
 				q.push(curr->left);
-
-			if (curr->right)
 				q.push(curr->right);
+			}
+			else
+				nums.push_back(INT_MIN);
 		}
+
+		while (!nums.empty() && nums.back() == INT_MIN)
+			nums.pop_back();
 
 		Logger::get().INFO(nums);
 	}
 };
 
+inline TreeNode *
+newBinaryTree(vector<int> nums)
+{
+	if (nums.size() == 0)
+		return nullptr;
+
+	TreeNode *root = new TreeNode(nums[0]);
+	queue<TreeNode *> q;
+
+	q.push(root);
+	int i = 1;
+
+	while (i < nums.size())
+	{
+		TreeNode *curr = q.front();
+		q.pop();
+
+		if (i < nums.size() && nums[i] != INT_MIN)
+		{
+			curr->left = new TreeNode(nums[i]);
+			q.push(curr->left);
+		}
+		i++;
+
+		if (i < nums.size() && nums[i] != INT_MIN)
+		{
+			curr->right = new TreeNode(nums[i]);
+			q.push(curr->right);
+		}
+		i++;
+	}
+
+	return root;
+}
+
 // the words insert level order, doesnt imply that nodes are constructed in
-// insert order.. i mean like it drills down the left subtree first right.. for
-// example if input is 1 2 3 4 5, then 1 2 then 4 then 5 then 3.
-// The level order implies the actual parameter of the function.. it constructs
+// insert order.. i mean like it drills down the left subtree first right..
+// for example if input is 1 2 3 4 5, then 1 2 then 4 then 5 then 3. The
+// level order implies the actual parameter of the function.. it constructs
 // a tree FROM a level order traversed array!!!!
 inline TreeNode *
 insertLevelOrder(vector<int> nums, TreeNode *root, int i, int n)
@@ -101,40 +144,7 @@ insertLevelOrder(vector<int> nums, TreeNode *root, int i, int n)
 }
 
 inline TreeNode *
-newBinaryTreeRecursive(vector<int> nums)
+_recursive_newBinaryTree(vector<int> nums)
 {
 	return insertLevelOrder(nums, nullptr, 0, nums.size());
-}
-
-// nums is at level-order
-inline TreeNode *
-newBinaryTree(vector<int> nums)
-{
-	if (nums.size() == 0)
-		return nullptr;
-
-	TreeNode *root = new TreeNode(nums.at(0));
-	queue<TreeNode *> q;
-
-	q.push(root);
-	int i = 1;
-
-	while (i < nums.size())
-	{
-		TreeNode *curr = q.front();
-		q.pop();
-
-		curr->left = new TreeNode(nums.at(i));
-		i++;
-		q.push(curr->left);
-
-		if (i < nums.size())
-		{
-			curr->right = new TreeNode(nums.at(i));
-			i++;
-			q.push(curr->right);
-		}
-	}
-
-	return root;
 }
