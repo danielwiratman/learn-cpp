@@ -37,5 +37,5 @@ int
 main()
 {
 	TreeNode *root = newBinaryTree({ 5, 4, 6, INT_MIN, INT_MIN, 3, 7 });
-	root->print_info();
+	l.INFO(Solution().isValidBST(root));
 }
