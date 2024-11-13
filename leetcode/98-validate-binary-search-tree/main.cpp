@@ -1,6 +1,5 @@
 #include <climits>
 #include <vector>
-#include <string>
 #include <logger.h>
 #include <dwlc.h>
 
@@ -14,28 +13,27 @@ class Solution
 	bool
 	isValidBST(TreeNode *root)
 	{
+		return dfs(root, LONG_MIN, LONG_MAX);
+	}
+
+  private:
+	bool
+	dfs(TreeNode *root, long currMin, long currMax)
+	{
 		if (!root)
 			return true;
 
-		if (root->left)
-		{
-			if (!(root->val > root->left->val))
-				return false;
-		}
+		if (root->val <= currMin || root->val >= currMax)
+			return false;
 
-		if (root->right)
-		{
-			if (!(root->val < root->right->val))
-				return false;
-		}
-
-		return isValidBST(root->left) && isValidBST(root->right);
+		return dfs(root->left, currMin, root->val) &&
+			   dfs(root->right, root->val, currMax);
 	}
 };
 
 int
 main()
 {
-	TreeNode *root = newBinaryTree({ 5, 4, 6, INT_MIN, INT_MIN, 3, 7 });
+	TreeNode *root = newBinaryTree({ 5, 1, 4, INT_MIN, INT_MIN, 3, 6 });
 	l.INFO(Solution().isValidBST(root));
 }
