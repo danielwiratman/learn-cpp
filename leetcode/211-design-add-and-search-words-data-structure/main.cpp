@@ -41,31 +41,36 @@ class WordDictionary
 	bool
 	search(string word)
 	{
+		return dfs(word, 0, root);
+	}
+
+	bool
+	dfs(string word, int wordIdx, TrieNode *root)
+	{
 		TrieNode *curr = root;
 
-		for (char c : word)
+		for (int i = wordIdx; i < word.size(); i++)
 		{
+			char c = word[i];
 			if (c == '.')
 			{
-				for (TrieNode *t : curr->children)
+				for (TrieNode *child : curr->children)
 				{
-					dfs();
+					if (child && dfs(word, i + 1, child))
+						return true;
 				}
+				return false;
 			}
 			else
 			{
 				if (curr->children[c - 'a'] == NULL)
 					return false;
+
 				curr = curr->children[c - 'a'];
 			}
 		}
 
-		return true;
-	}
-
-	bool
-	dfs()
-	{
+		return curr->wordCount;
 	}
 };
 
